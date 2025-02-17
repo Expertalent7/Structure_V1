@@ -138,23 +138,37 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     function updateBeamUI() {
-        if (!window.beamData || !window.beamData.beams) return;
-
-        beams.forEach(beamElement => {
-            let beamName = beamElement.dataset.name.trim().toLowerCase();
-            let beamDataEntry = window.beamData.beams.find(b => 
-                b.Beam_Name.toLowerCase().trim() === beamName
-            );
-
-            if (beamDataEntry) {
-                beamElement.classList.toggle("selected", beamDataEntry.Progress > 0);
-                beamElement.dataset.progress = (beamDataEntry.Progress * 100).toFixed(2);
-                beamElement.dataset.qrCode = beamDataEntry.QR_Code;
-            } else {
-                beamElement.classList.remove("selected");
-            }
-        });
+    if (!window.beamData || !window.beamData.beams) {
+        console.error("❌ beamData is not available or missing 'beams' array!");
+        return;
     }
+
+    document.querySelectorAll(".beam").forEach(beamElement => {
+        let beamName = beamElement.dataset.name?.toLowerCase().trim();
+        let beamDataEntry = window.beamData.beams.find(b =>
+            b.Beam_Name.toLowerCase().trim() === beamName
+        );
+
+        if (beamDataEntry) {
+            // ✅ Add green for installed beams, red for not installed
+            if (beamDataEntry.Progress > 0) {
+                beamElement.classList.add("installed");
+                beamElement.classList.remove("not-installed");
+            } else {
+                beamElement.classList.add("not-installed");
+                beamElement.classList.remove("installed");
+            }
+
+            beamElement.dataset.progress = (beamDataEntry.Progress * 100).toFixed(2);
+            beamElement.dataset.qrCode = beamDataEntry.QR_Code;
+            console.log(`✅ Updated ${beamName} with Progress ${beamDataEntry.Progress}`);
+        } else {
+            beamElement.classList.remove("installed", "not-installed");
+            console.warn(`⚠ No matching data for ${beamName}`);
+        }
+    });
+}
+
 
     function updateTotalProgress() {
         if (!window.beamData || !window.beamData.beams) return;
