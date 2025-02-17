@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Beam Selection Tool</title>
+	
     <link rel="stylesheet" href="styles.css">
     <script defer src="script.js"></script>
+	
 </head>
 <style>
 	  /* 🎨 Global Styles */
@@ -331,6 +333,8 @@ img {
         <p><strong>Status:</strong> <span id="beamStatus"></span></p>
         <p><strong>Weight:</strong> <span id="beamWeight"></span></p>
         <p><strong>Progress:</strong> <span id="beamProgress"></span></p>
+	<p id="installationProgress">Installation Progress: 0%</p>
+
         <p><strong>Last Scanned:</strong> <span id="beamLastScanned"></span></p>
         <p><strong>QR Code:</strong></p>
         <img id="beamQRCode" src="https://dummyimage.com/150x150/cccccc/000000&text=No+QR+Code" alt="QR Code">
@@ -465,7 +469,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    function updateTotalProgress() {
+function updateTotalProgress() {
     if (!window.beamData || !window.beamData.beams) {
         console.error("❌ beamData is not available or missing 'beams' array!");
         return;
@@ -475,7 +479,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let installedWeight = 0;
 
     window.beamData.beams.forEach(beam => {
-        totalWeight += beam.Weight || 0; 
+        totalWeight += beam.Weight || 0;
         if (beam.Progress > 0) {
             installedWeight += beam.Weight || 0;
         }
@@ -483,16 +487,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let overallProgress = totalWeight > 0 ? (installedWeight / totalWeight) * 100 : 0;
     
-    // ✅ Update Progress Bar
     let progressBar = document.getElementById("progressBar");
-    let progressText = `${Math.round(overallProgress)}%`;
+    let progressText = document.getElementById("installationProgress");
 
-    progressBar.style.width = `${Math.min(overallProgress, 100)}%`;
-    progressBar.innerText = progressText;
-    document.getElementById("installationProgressText").innerText = `Installation Progress: ${progressText}`;
-
-    console.log(`✅ Total progress updated to: ${progressText}`);
+    if (progressBar && progressText) {
+        progressBar.style.width = `${Math.min(overallProgress, 100)}%`;
+        progressBar.innerText = `${overallProgress.toFixed(2)}%`;
+        progressText.innerText = `Installation Progress: ${overallProgress.toFixed(2)}%`;
+    } else {
+        console.error("❌ Progress elements not found in DOM.");
+    }
 }
+
 
 
     function updateBeamUI() {
