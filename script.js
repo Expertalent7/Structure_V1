@@ -155,7 +155,7 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("installationProgress").innerText = `Installation Progress: ${overallProgress.toFixed(2)}%`;
     }
 
-    // ✅ Fetch data & attach listeners
-    fetchBeamStatus();
+        // ✅ Fetch beam data every 5 seconds
+    setInterval(fetchBeamStatus, 5000);
 });
 
