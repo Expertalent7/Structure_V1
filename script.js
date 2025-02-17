@@ -116,28 +116,20 @@ async function fetchBeamStatus() {
         const response = await fetch("https://script.google.com/macros/s/AKfycbzYGsk8FxgsszxZfzDSKjMoCI7zd1bGg5iUqmpc7R8jg92U_xG5W1VNp2R5LTlEssXEIg/exec");
         if (!response.ok) throw new Error(`❌ HTTP error! Status: ${response.status}`);
 
-        const text = await response.text();
-        console.log("🛠 Raw API Response (Before Parsing):", text);
-
-        if (!text.trim()) throw new Error("❌ API returned an empty response!");
-
-        let data;
-        try {
-            data = JSON.parse(text);
-        } catch (jsonError) {
-            console.error("❌ Error parsing JSON: ", jsonError.message);
-            return;
-        }
-
+        const data = await response.json();
         console.log("✅ JSON Data Received:", data);
         window.beamData = data;
+
         updateBeamUI();
         updateTotalProgress();
-
     } catch (error) {
         console.error("❌ Error fetching beam data:", error);
     }
 }
+
+// ✅ Ensure the function runs on an interval:
+setInterval(fetchBeamStatus, 5000);
+
 
 function updateBeamUI() {
     if (!window.beamData || !window.beamData.beams) {
@@ -146,31 +138,17 @@ function updateBeamUI() {
     }
 
     document.querySelectorAll(".beam").forEach(beamElement => {
-        let beamName = beamElement.dataset.name?.toLowerCase().trim();
-        let beamDataEntry = window.beamData.beams.find(b =>
-            b.Beam_Name.toLowerCase().trim() === beamName
-        );
+    let beamName = beamElement.dataset.name?.toLowerCase().trim();
+    let beamDataEntry = window.beamData.beams.find(b =>
+        b.Beam_Name.toLowerCase().trim() === beamName
+    );
 
-        if (beamDataEntry) {
-            // ✅ Remove any previous class before adding a new one
-            beamElement.classList.remove("installed", "not-installed");
+    if (beamDataEntry) {
+        beamElement.classList.toggle("installed", beamDataEntry.Progress > 0);
+        beamElement.classList.toggle("not-installed", beamDataEntry.Progress === 0);
+    }
+});
 
-            if (beamDataEntry.Progress > 0) {
-                beamElement.classList.add("installed"); // ✅ Make it Green
-            } else {
-                beamElement.classList.add("not-installed"); // 🔴 Make it Red
-            }
-
-            beamElement.dataset.progress = (beamDataEntry.Progress * 100).toFixed(2);
-            beamElement.dataset.qrCode = beamDataEntry.QR_Code;
-            console.log(`✅ Updated ${beamName} with Progress ${beamDataEntry.Progress}`);
-        } else {
-            // If no matching beam found, reset the class
-            beamElement.classList.remove("installed", "not-installed");
-            console.warn(`⚠ No matching data for ${beamName}`);
-        }
-    });
-}
 
 
     function updateTotalProgress() {
