@@ -22,22 +22,30 @@ body {
     max-width: 600px;
 }
 /* 🎯 Beam Styling */
-/* 🎯 Beam Animation - Smooth color transition */
+/* ✅ Beam container styling */
+.container {
+    position: relative;
+    width: 494px; /* Match the image width */
+    height: 682px; /* Match the image height */
+}
+
+/* ✅ Beams should be absolutely positioned inside the container */
 .beam {
-    transition: background-color 0.5s ease-in-out, transform 0.3s ease-in-out;
+    position: absolute;
+    background-color: transparent;
+    transition: all 0.2s ease-in-out;
 }
 
-/* ✅ Green for installed beams with animation */
+/* ✅ Installed beams */
 .beam.installed {
-    background-color: rgba(0, 255, 0, 0.7) !important;
-    border: 2px solid green !important;
+    background-color: rgba(0, 255, 0, 0.7);
+    border: 2px solid green;
 }
 
-
-/* 🔴 Red for not installed beams */
+/* ✅ Not installed beams */
 .beam.not-installed {
-    background-color: rgba(255, 0, 0, 0.7) !important;
-    border: 2px solid red !important;
+    background-color: rgba(255, 0, 0, 0.7);
+    border: 2px solid red;
 }
 
 /* ✨ Hover Effect */
