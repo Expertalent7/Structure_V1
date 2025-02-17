@@ -189,6 +189,9 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 }
 
+
+
+
     function updateBeamUI() {
     if (!window.beamData || !window.beamData.beams) {
         console.error("❌ beamData is not available or missing 'beams' array!");
@@ -229,9 +232,8 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("installationProgress").innerText = `Installation Progress: ${overallProgress.toFixed(2)}%`;
     }
 
-    fetchBeamStatus().then(() => {
+   // ✅ Ensure event listeners are attached after fetching data
+fetchBeamStatus().then(() => {
     updateTotalProgress();
-    attachBeamEventListeners(); // Ensure events are attached after data is loaded
+    attachBeamEventListeners();
 }).catch(console.error);
-
-});
