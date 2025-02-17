@@ -4,7 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Beam Selection Tool</title>
-    <style>
+    <link rel="stylesheet" href="styles.css">
+    <script defer src="script.js"></script>
+</head>
+<style>
 	  /* 🎨 Global Styles */
 body {
     text-align: center;
@@ -254,20 +257,19 @@ img {
 }
 
 
-    </style>
-</head>
+</style>
+
 <body>
-    <!-- 🔆 Dark Mode Toggle -->
+    <!-- 🌙 Dark Mode Toggle -->
     <button id="darkModeToggle" class="toggle-btn">🌙 Dark Mode</button>
 
     <h1>Beam Selection Tool</h1>
 
     <!-- 🔍 Search Bar -->
-    <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 10px;">
-        <input type="text" id="beamSearch" placeholder="Search beam..." style="flex-grow: 1; padding: 8px;">
-        <button onclick="clearSearch()" style="padding: 8px; margin-left: 5px; cursor: pointer;">❌ Clear</button>
+    <div class="search-container">
+        <input type="text" id="beamSearch" placeholder="Search beam...">
+        <button onclick="clearSearch()">❌ Clear</button>
     </div>
-
 
     <!-- 📌 Beam Structure -->
     <div class="wrapper">
@@ -305,30 +307,25 @@ img {
     </div>
 	
     <!-- 📊 Installation Progress -->
-    <h2 id="installationProgressText">Installation Progress: 0%</h2>
-
-    <div id="progressContainer">
-        <div id="progressBar">0%</div>
+    <h2 id="progress">Installation Progress: <span id="progressText">0%</span></h2>
+    <div class="progress-wrapper">
+        <div id="progressContainer">
+            <div id="progressBar">0%</div>
+        </div>
     </div>
 
     <p id="statusMessage">Loading beam status...</p>
 
-    <!-- 📋 Beam Status Legend -->
+     <!-- 📋 Beam Status Legend -->
     <div id="beam-legend">
         <h3>Beam Status Legend</h3>
-        <div class="legend-item">
-            <span class="legend-color" style="background-color: rgba(0, 255, 0, 0.7);"></span> Installed
-        </div>
-        <div class="legend-item">
-            <span class="legend-color" style="background-color: rgba(255, 0, 0, 0.5);"></span> Not Installed
-        </div>
-        <div class="legend-item">
-            <span class="legend-color" style="border: 3px solid yellow;"></span> Search Highlight
-        </div>
+        <div class="legend-item"><span class="legend-color installed"></span> Installed</div>
+        <div class="legend-item"><span class="legend-color not-installed"></span> Not Installed</div>
+        <div class="legend-item"><span class="legend-color highlight"></span> Search Highlight</div>
     </div>
 
     <!-- 📌 Beam Details Panel -->
-    <div id="beamDetailsPanel" class="details-panel" style="display: none;">
+    <div id="beamDetailsPanel" class="details-panel">
         <h3>Beam Details</h3>
         <p><strong>Name:</strong> <span id="beamName"></span></p>
         <p><strong>Status:</strong> <span id="beamStatus"></span></p>
@@ -336,12 +333,9 @@ img {
         <p><strong>Progress:</strong> <span id="beamProgress"></span></p>
         <p><strong>Last Scanned:</strong> <span id="beamLastScanned"></span></p>
         <p><strong>QR Code:</strong></p>
-        <a id="beamQRCodeLink" href="#" target="_blank">
-            <img id="beamQRCode" src="https://dummyimage.com/150x150/cccccc/000000&text=No+QR+Code" alt="QR Code" style="width: 150px; height: 150px;">
-        </a>
+        <img id="beamQRCode" src="https://dummyimage.com/150x150/cccccc/000000&text=No+QR+Code" alt="QR Code">
         <button onclick="closePanel()">❌ Close</button>
     </div>
-
     <div id="beam-info">Click on a beam to see details</div>
 
     <script>
