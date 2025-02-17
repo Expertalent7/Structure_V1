@@ -87,13 +87,14 @@ body {
     text-align: left;
 }
 
-/* ✅ Ensure the details panel is well visible */
+/* ✅ Ensure the panel remains visible */
 .details-panel img {
     max-width: 100%;
     height: auto;
     display: block;
     margin: 10px auto;
 }
+
 
 /* ✅ Progress Bar */
 #progressContainer {
