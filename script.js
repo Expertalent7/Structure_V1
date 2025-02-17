@@ -101,7 +101,7 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log("🔄 Fetching beam status...");
 
         try {
-            const response = await fetch("YOUR_GOOGLE_SCRIPT_URL_HERE");
+            const response = await fetch("https://script.google.com/macros/s/AKfycbxp_PumTiMgGHLYSTNVsJUAdCzB5QT7y87dgViKiO4y7KL7MBfX4IGVYVdpIfXVOxJvzg/exec");
             if (!response.ok) throw new Error(`❌ HTTP error! Status: ${response.status}`);
 
             const text = await response.text();
