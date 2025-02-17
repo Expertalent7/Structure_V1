@@ -30,6 +30,15 @@ document.addEventListener("DOMContentLoaded", function () {
         beamDetailsPanel.style.display = "none";
     };
 
+    // ✅ Make QR Code Clickable
+    document.getElementById("beamQRCode").addEventListener("click", function () {
+    let qrCodeUrl = this.src;
+    if (qrCodeUrl) {
+        window.open(qrCodeUrl, "_blank");
+    }
+});
+
+
     // 🎯 Show Beam Details on Click
     beams.forEach(beamElement => {
         beamElement.addEventListener("click", function (event) {
