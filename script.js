@@ -7,7 +7,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const progressText = document.getElementById("progressValue");
     const progressBar = document.getElementById("progressBar");
     const tooltip = document.getElementById("tooltip"); // ✅ Use the tooltip div from HTML
-
     const beams = document.querySelectorAll(".beam");
 
     // ✅ Search Beams Efficiently
@@ -32,14 +31,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // ✅ Make QR Code Clickable
     document.getElementById("beamQRCode").addEventListener("click", function () {
-    let qrCodeUrl = this.src;
-    if (qrCodeUrl) {
-        window.open(qrCodeUrl, "_blank");
-    }
+        let qrCodeUrl = this.src;
+        if (qrCodeUrl) {
+            window.open(qrCodeUrl, "_blank");
+        }
     });
-    beamDetailsPanel.style.left = `${event.clientX + 10}px`;
-    beamDetailsPanel.style.top = `${event.clientY + 10}px`;
-
 
     // 🎯 Show Beam Details on Click
     beams.forEach(beamElement => {
@@ -50,7 +46,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             let beamName = this.dataset.name.trim().toLowerCase();
-            let beamDataEntry = window.beamData.beams.find(b => 
+            let beamDataEntry = window.beamData.beams.find(b =>
                 b.Beam_Name.toLowerCase().trim() === beamName
             );
 
@@ -66,6 +62,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 document.getElementById("beamProgress").innerText = beamProgress;
                 document.getElementById("beamQRCode").src = beamQRCode;
 
+                // ✅ Fix Positioning of the Details Panel on Click
                 let beamRect = event.target.getBoundingClientRect();
                 beamDetailsPanel.style.left = `${beamRect.left + window.scrollX + beamRect.width / 2}px`;
                 beamDetailsPanel.style.top = `${beamRect.top + window.scrollY - 50}px`; // ✅ Positioned above beam
@@ -78,78 +75,75 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // 🎯 Tooltip for Beam Info on Hover (Auto-position)
-    document.querySelectorAll(".beam").forEach(beam => {
-    beam.addEventListener("mouseenter", (e) => {
-        let beamName = e.target.dataset.name;
-        let beamStatus = e.target.classList.contains("installed") ? "Installed" : "Not Installed";
+    beams.forEach(beam => {
+        beam.addEventListener("mouseenter", (e) => {
+            let beamName = e.target.dataset.name;
+            let beamStatus = e.target.classList.contains("installed") ? "Installed" : "Not Installed";
 
-        tooltip.innerText = `${beamName} - ${beamStatus}`;
-        document.body.appendChild(tooltip);
-        tooltip.style.display = "block";
+            tooltip.innerText = `${beamName} - ${beamStatus}`;
+            document.body.appendChild(tooltip);
+            tooltip.style.display = "block";
 
-        let x = e.pageX + 15;
-        let y = e.pageY + 15;
+            let x = e.pageX + 15;
+            let y = e.pageY + 15;
 
-        // ✅ Prevent tooltip from going off-screen
-        if (x + tooltip.offsetWidth > window.innerWidth) {
-            x = e.pageX - tooltip.offsetWidth - 15;
-        }
-        if (y + tooltip.offsetHeight > window.innerHeight) {
-            y = e.pageY - tooltip.offsetHeight - 15;
-        }
+            // ✅ Prevent tooltip from going off-screen
+            if (x + tooltip.offsetWidth > window.innerWidth) {
+                x = e.pageX - tooltip.offsetWidth - 15;
+            }
+            if (y + tooltip.offsetHeight > window.innerHeight) {
+                y = e.pageY - tooltip.offsetHeight - 15;
+            }
 
-        tooltip.style.left = `${x}px`;
-        tooltip.style.top = `${y}px`;
+            tooltip.style.left = `${x}px`;
+            tooltip.style.top = `${y}px`;
+        });
+
+        beam.addEventListener("mouseleave", () => {
+            tooltip.style.display = "none";
+        });
     });
-
-    beam.addEventListener("mouseleave", () => {
-        tooltip.style.display = "none";
-    });
-});
-
 
     // 🔄 Fetch Beam Status
-async function fetchBeamStatus() {
-    console.log("🔄 Fetching beam status...");
+    async function fetchBeamStatus() {
+        console.log("🔄 Fetching beam status...");
 
-    try {
-        const response = await fetch("https://script.google.com/macros/s/AKfycbzYGsk8FxgsszxZfzDSKjMoCI7zd1bGg5iUqmpc7R8jg92U_xG5W1VNp2R5LTlEssXEIg/exec");
-        if (!response.ok) throw new Error(`❌ HTTP error! Status: ${response.status}`);
+        try {
+            const response = await fetch("https://script.google.com/macros/s/AKfycbzYGsk8FxgsszxZfzDSKjMoCI7zd1bGg5iUqmpc7R8jg92U_xG5W1VNp2R5LTlEssXEIg/exec");
+            if (!response.ok) throw new Error(`❌ HTTP error! Status: ${response.status}`);
 
-        const data = await response.json();
-        console.log("✅ JSON Data Received:", data);
-        window.beamData = data;
+            const data = await response.json();
+            console.log("✅ JSON Data Received:", data);
+            window.beamData = data;
 
-        updateBeamUI();
-        updateTotalProgress();
-    } catch (error) {
-        console.error("❌ Error fetching beam data:", error);
-    }
-}
-
-// ✅ Ensure the function runs on an interval:
-setInterval(fetchBeamStatus, 5000);
-
-
-function updateBeamUI() {
-    if (!window.beamData || !window.beamData.beams) {
-        console.error("❌ beamData is not available or missing 'beams' array!");
-        return;
+            updateBeamUI();
+            updateTotalProgress();
+        } catch (error) {
+            console.error("❌ Error fetching beam data:", error);
+        }
     }
 
-    document.querySelectorAll(".beam").forEach(beamElement => {
-    let beamName = beamElement.dataset.name?.toLowerCase().trim();
-    let beamDataEntry = window.beamData.beams.find(b =>
-        b.Beam_Name.toLowerCase().trim() === beamName
-    );
+    // ✅ Ensure the function runs on an interval:
+    setInterval(fetchBeamStatus, 5000);
 
-    if (beamDataEntry) {
-        beamElement.classList.toggle("installed", beamDataEntry.Progress > 0);
-        beamElement.classList.toggle("not-installed", beamDataEntry.Progress === 0);
+    function updateBeamUI() {
+        if (!window.beamData || !window.beamData.beams) {
+            console.error("❌ beamData is not available or missing 'beams' array!");
+            return;
+        }
+
+        document.querySelectorAll(".beam").forEach(beamElement => {
+            let beamName = beamElement.dataset.name?.toLowerCase().trim();
+            let beamDataEntry = window.beamData.beams.find(b =>
+                b.Beam_Name.toLowerCase().trim() === beamName
+            );
+
+            if (beamDataEntry) {
+                beamElement.classList.toggle("installed", beamDataEntry.Progress > 0);
+                beamElement.classList.toggle("not-installed", beamDataEntry.Progress === 0);
+            }
+        });
     }
-});
-
-
 
     function updateTotalProgress() {
         if (!window.beamData || !window.beamData.beams) return;
@@ -166,15 +160,13 @@ function updateBeamUI() {
         document.getElementById("installationProgress").innerText = `Installation Progress: ${overallProgress.toFixed(2)}%`;
     }
 
-        // ✅ Fetch beam data every 5 seconds and update UI
-        setInterval(async () => {
-    try {
-        await fetchBeamStatus(); // Fetch new data
-        updateTotalProgress();  // Update progress after fetching
-    } catch (error) {
-        console.error("❌ Error updating beam status:", error);
-    }
-}, 5000);
-
+    // ✅ Fetch beam data every 5 seconds and update UI
+    setInterval(async () => {
+        try {
+            await fetchBeamStatus(); // Fetch new data
+            updateTotalProgress();  // Update progress after fetching
+        } catch (error) {
+            console.error("❌ Error updating beam status:", error);
+        }
+    }, 5000);
 });
-
