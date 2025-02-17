@@ -66,37 +66,36 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    // 🎯 Tooltip for Beam Info on Hover (Now Appears Directly on Beam)
-    beams.forEach(beam => {
-        beam.addEventListener("mouseenter", (event) => {
-            let beamName = event.target.dataset.name.trim();
-            let beamDataEntry = window.beamData?.beams?.find(b => 
-                b.Beam_Name.toLowerCase().trim() === beamName.toLowerCase().trim()
-            );
+    // 🎯 Tooltip for Beam Info on Hover (Auto-position)
+    document.querySelectorAll(".beam").forEach(beam => {
+    beam.addEventListener("mouseenter", (e) => {
+        let beamName = e.target.dataset.name;
+        let beamStatus = e.target.classList.contains("installed") ? "Installed" : "Not Installed";
 
-            if (beamDataEntry) {
-                let beamStatus = beamDataEntry.Progress > 0 ? "Installed" : "Not Installed";
-                tooltip.innerText = `${beamName} - ${beamStatus}`;
-                
-                // ✅ Position tooltip **above or beside the beam**
-                let beamRect = event.target.getBoundingClientRect();
-                tooltip.style.left = `${beamRect.left + window.scrollX + beamRect.width / 2}px`;
-                tooltip.style.top = `${beamRect.top + window.scrollY - 30}px`; // Above the beam
-                tooltip.style.transform = "translate(-50%, -100%)";
-                tooltip.style.display = "block";
-            }
-        });
+        tooltip.innerText = `${beamName} - ${beamStatus}`;
+        document.body.appendChild(tooltip);
+        tooltip.style.display = "block";
 
-        beam.addEventListener("mousemove", (event) => {
-            let beamRect = event.target.getBoundingClientRect();
-            tooltip.style.left = `${beamRect.left + window.scrollX + beamRect.width / 2}px`;
-            tooltip.style.top = `${beamRect.top + window.scrollY - 30}px`;
-        });
+        let x = e.pageX + 15;
+        let y = e.pageY + 15;
 
-        beam.addEventListener("mouseleave", () => {
-            tooltip.style.display = "none";
-        });
+        // ✅ Prevent tooltip from going off-screen
+        if (x + tooltip.offsetWidth > window.innerWidth) {
+            x = e.pageX - tooltip.offsetWidth - 15;
+        }
+        if (y + tooltip.offsetHeight > window.innerHeight) {
+            y = e.pageY - tooltip.offsetHeight - 15;
+        }
+
+        tooltip.style.left = `${x}px`;
+        tooltip.style.top = `${y}px`;
     });
+
+    beam.addEventListener("mouseleave", () => {
+        tooltip.style.display = "none";
+    });
+});
+
 
     // 🔄 Fetch Beam Status
     async function fetchBeamStatus() {
