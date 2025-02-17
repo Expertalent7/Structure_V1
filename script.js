@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (qrCodeUrl) {
         window.open(qrCodeUrl, "_blank");
     }
-});
+    });
 
 
     // 🎯 Show Beam Details on Click
