@@ -29,10 +29,10 @@ body {
 
 /* ✅ Green for installed beams with animation */
 .beam.installed {
-    background-color: rgba(0, 255, 0, 0.9) !important;
+    background-color: rgba(0, 255, 0, 0.7) !important;
     border: 2px solid green !important;
-    transform: scale(1.1);
 }
+
 
 /* 🔴 Red for not installed beams */
 .beam.not-installed {
