@@ -4,29 +4,11 @@ document.addEventListener("DOMContentLoaded", function () {
     // 🔄 Cache frequently accessed elements
     const beamSearch = document.getElementById("beamSearch");
     const beamDetailsPanel = document.getElementById("beamDetailsPanel");
-    const statusMessage = document.getElementById("statusMessage");
-    const progressText = document.getElementById("progress");
+    const progressText = document.getElementById("progressValue");
     const progressBar = document.getElementById("progressBar");
-
-    // 🎯 Create Tooltip (Attach to Document)
-    const tooltip = document.createElement("div");
-    tooltip.classList.add("beam-tooltip");
-    tooltip.style.position = "absolute";
-    tooltip.style.display = "none";
-    tooltip.style.padding = "6px";
-    tooltip.style.backgroundColor = "black";
-    tooltip.style.color = "white";
-    tooltip.style.borderRadius = "5px";
-    tooltip.style.fontSize = "12px";
-    tooltip.style.pointerEvents = "none";
-    tooltip.style.zIndex = "1000"; // Ensures it's above other elements
-    document.body.appendChild(tooltip);
+    const tooltip = document.getElementById("tooltip"); // ✅ Use the tooltip div from HTML
 
     const beams = document.querySelectorAll(".beam");
-
-    // ✅ Attach globally for debugging
-    window.fetchBeamStatus = fetchBeamStatus;
-    window.updateBeamUI = updateBeamUI;
 
     // ✅ Search Beams Efficiently
     beamSearch.addEventListener("input", function () {
@@ -73,10 +55,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 document.getElementById("beamProgress").innerText = beamProgress;
                 document.getElementById("beamQRCode").src = beamQRCode;
 
-                let isMobile = window.innerWidth <= 768;
-                beamDetailsPanel.style.left = isMobile ? "50%" : `${event.pageX + 10}px`;
-                beamDetailsPanel.style.top = isMobile ? "50%" : `${event.pageY + 10}px`;
-                beamDetailsPanel.style.transform = isMobile ? "translate(-50%, -50%)" : "";
+                let beamRect = event.target.getBoundingClientRect();
+                beamDetailsPanel.style.left = `${beamRect.left + window.scrollX + beamRect.width / 2}px`;
+                beamDetailsPanel.style.top = `${beamRect.top + window.scrollY - 50}px`; // ✅ Positioned above beam
+                beamDetailsPanel.style.transform = "translate(-50%, -100%)";
                 beamDetailsPanel.style.display = "block";
             } else {
                 console.warn(`⚠ No matching data found for ${beamName}`);
@@ -84,7 +66,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    // 🎯 Tooltip for Beam Info on Hover (Position on Beam)
+    // 🎯 Tooltip for Beam Info on Hover (Now Appears Directly on Beam)
     beams.forEach(beam => {
         beam.addEventListener("mouseenter", (event) => {
             let beamName = event.target.dataset.name.trim();
@@ -96,11 +78,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 let beamStatus = beamDataEntry.Progress > 0 ? "Installed" : "Not Installed";
                 tooltip.innerText = `${beamName} - ${beamStatus}`;
                 
-                // ✅ Position tooltip **above** or **beside** the beam
+                // ✅ Position tooltip **above or beside the beam**
                 let beamRect = event.target.getBoundingClientRect();
                 tooltip.style.left = `${beamRect.left + window.scrollX + beamRect.width / 2}px`;
-                tooltip.style.top = `${beamRect.top + window.scrollY - 25}px`; // Above the beam
-                tooltip.style.transform = "translate(-50%, -100%)"; // Center it above
+                tooltip.style.top = `${beamRect.top + window.scrollY - 30}px`; // Above the beam
+                tooltip.style.transform = "translate(-50%, -100%)";
                 tooltip.style.display = "block";
             }
         });
@@ -108,7 +90,7 @@ document.addEventListener("DOMContentLoaded", function () {
         beam.addEventListener("mousemove", (event) => {
             let beamRect = event.target.getBoundingClientRect();
             tooltip.style.left = `${beamRect.left + window.scrollX + beamRect.width / 2}px`;
-            tooltip.style.top = `${beamRect.top + window.scrollY - 25}px`;
+            tooltip.style.top = `${beamRect.top + window.scrollY - 30}px`;
         });
 
         beam.addEventListener("mouseleave", () => {
@@ -121,7 +103,7 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log("🔄 Fetching beam status...");
 
         try {
-            const response = await fetch("https://script.google.com/macros/s/AKfycbxp_PumTiMgGHLYSTNVsJUAdCzB5QT7y87dgViKiO4y7KL7MBfX4IGVYVdpIfXVOxJvzg/exec");
+            const response = await fetch("https://script.google.com/macros/s/YOUR_SCRIPT_URL/exec");
             if (!response.ok) throw new Error(`❌ HTTP error! Status: ${response.status}`);
 
             const text = await response.text();
@@ -176,3 +158,4 @@ document.addEventListener("DOMContentLoaded", function () {
     // ✅ Fetch data & attach listeners
     fetchBeamStatus();
 });
+
