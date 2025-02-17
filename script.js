@@ -37,8 +37,8 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    // 🎯 Show Beam Details on Click
-    beams.forEach(beamElement => {
+// 🎯 Show Beam Details on Click
+beams.forEach(beamElement => {
     beamElement.addEventListener("click", function (event) {
         if (!window.beamData || !window.beamData.beams) {
             console.warn("⚠ No beam data available");
@@ -62,7 +62,7 @@ document.addEventListener("DOMContentLoaded", function () {
             document.getElementById("beamProgress").innerText = beamProgress;
             document.getElementById("beamQRCode").src = beamQRCode;
 
-            // ✅ Fix Positioning of the Details Panel on Click
+            // ✅ Fix Positioning of the Details Panel
             let beamRect = event.target.getBoundingClientRect();
             let panelWidth = beamDetailsPanel.offsetWidth;
             let panelHeight = beamDetailsPanel.offsetHeight;
@@ -70,19 +70,21 @@ document.addEventListener("DOMContentLoaded", function () {
             let newX = beamRect.left + window.scrollX + beamRect.width / 2 - panelWidth / 2;
             let newY = beamRect.top + window.scrollY - panelHeight - 10; // 10px above beam
 
-            // ✅ Ensure the panel doesn't go off-screen
+            // ✅ Ensure the panel stays within the screen
             if (newX < 10) newX = 10;
             if (newX + panelWidth > window.innerWidth - 10) newX = window.innerWidth - panelWidth - 10;
             if (newY < 10) newY = beamRect.top + window.scrollY + beamRect.height + 10; // Move below if above is not possible
 
             beamDetailsPanel.style.left = `${newX}px`;
             beamDetailsPanel.style.top = `${newY}px`;
+            beamDetailsPanel.style.transform = "translate(-50%, -100%)";
             beamDetailsPanel.style.display = "block";
         } else {
             console.warn(`⚠ No matching data found for ${beamName}`);
         }
     });
 });
+
 
 
     // 🎯 Tooltip for Beam Info on Hover (Auto-position)
