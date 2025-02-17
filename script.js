@@ -39,40 +39,51 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // 🎯 Show Beam Details on Click
     beams.forEach(beamElement => {
-        beamElement.addEventListener("click", function (event) {
-            if (!window.beamData || !window.beamData.beams) {
-                console.warn("⚠ No beam data available");
-                return;
-            }
+    beamElement.addEventListener("click", function (event) {
+        if (!window.beamData || !window.beamData.beams) {
+            console.warn("⚠ No beam data available");
+            return;
+        }
 
-            let beamName = this.dataset.name.trim().toLowerCase();
-            let beamDataEntry = window.beamData.beams.find(b =>
-                b.Beam_Name.toLowerCase().trim() === beamName
-            );
+        let beamName = this.dataset.name.trim().toLowerCase();
+        let beamDataEntry = window.beamData.beams.find(b =>
+            b.Beam_Name.toLowerCase().trim() === beamName
+        );
 
-            if (beamDataEntry) {
-                let beamStatus = beamDataEntry.Progress > 0 ? "Installed" : "Not Installed";
-                let beamWeight = beamDataEntry.Weight ? `${beamDataEntry.Weight} kg` : "Unknown kg";
-                let beamProgress = (beamDataEntry.Progress * 100).toFixed(2) + "%";
-                let beamQRCode = beamDataEntry.QR_Code || "https://via.placeholder.com/150";
+        if (beamDataEntry) {
+            let beamStatus = beamDataEntry.Progress > 0 ? "Installed" : "Not Installed";
+            let beamWeight = beamDataEntry.Weight ? `${beamDataEntry.Weight} kg` : "Unknown kg";
+            let beamProgress = (beamDataEntry.Progress * 100).toFixed(2) + "%";
+            let beamQRCode = beamDataEntry.QR_Code || "https://via.placeholder.com/150";
 
-                document.getElementById("beamName").innerText = beamDataEntry.Beam_Name;
-                document.getElementById("beamStatus").innerText = beamStatus;
-                document.getElementById("beamWeight").innerText = beamWeight;
-                document.getElementById("beamProgress").innerText = beamProgress;
-                document.getElementById("beamQRCode").src = beamQRCode;
+            document.getElementById("beamName").innerText = beamDataEntry.Beam_Name;
+            document.getElementById("beamStatus").innerText = beamStatus;
+            document.getElementById("beamWeight").innerText = beamWeight;
+            document.getElementById("beamProgress").innerText = beamProgress;
+            document.getElementById("beamQRCode").src = beamQRCode;
 
-                // ✅ Fix Positioning of the Details Panel on Click
-                let beamRect = event.target.getBoundingClientRect();
-                beamDetailsPanel.style.left = `${beamRect.left + window.scrollX + beamRect.width / 2}px`;
-                beamDetailsPanel.style.top = `${beamRect.top + window.scrollY - 50}px`; // ✅ Positioned above beam
-                beamDetailsPanel.style.transform = "translate(-50%, -100%)";
-                beamDetailsPanel.style.display = "block";
-            } else {
-                console.warn(`⚠ No matching data found for ${beamName}`);
-            }
-        });
+            // ✅ Fix Positioning of the Details Panel on Click
+            let beamRect = event.target.getBoundingClientRect();
+            let panelWidth = beamDetailsPanel.offsetWidth;
+            let panelHeight = beamDetailsPanel.offsetHeight;
+
+            let newX = beamRect.left + window.scrollX + beamRect.width / 2 - panelWidth / 2;
+            let newY = beamRect.top + window.scrollY - panelHeight - 10; // 10px above beam
+
+            // ✅ Ensure the panel doesn't go off-screen
+            if (newX < 10) newX = 10;
+            if (newX + panelWidth > window.innerWidth - 10) newX = window.innerWidth - panelWidth - 10;
+            if (newY < 10) newY = beamRect.top + window.scrollY + beamRect.height + 10; // Move below if above is not possible
+
+            beamDetailsPanel.style.left = `${newX}px`;
+            beamDetailsPanel.style.top = `${newY}px`;
+            beamDetailsPanel.style.display = "block";
+        } else {
+            console.warn(`⚠ No matching data found for ${beamName}`);
+        }
     });
+});
+
 
     // 🎯 Tooltip for Beam Info on Hover (Auto-position)
     beams.forEach(beam => {
@@ -122,9 +133,6 @@ document.addEventListener("DOMContentLoaded", function () {
             console.error("❌ Error fetching beam data:", error);
         }
     }
-
-    // ✅ Ensure the function runs on an interval:
-    setInterval(fetchBeamStatus, 5000);
 
     function updateBeamUI() {
         if (!window.beamData || !window.beamData.beams) {
