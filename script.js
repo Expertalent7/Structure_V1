@@ -237,4 +237,4 @@ fetchBeamStatus().then(() => {
     updateTotalProgress();
     attachBeamEventListeners();
 }).catch(console.error);
-}
+});
