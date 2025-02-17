@@ -176,30 +176,31 @@ img {
     background: #666;
 }
 
-/* 🎨 Beam Legend */
-#beam-legend {
-    text-align: center;
-    margin-top: 15px;
-    padding: 10px;
-    background: #f5f5f5;
-    border-radius: 10px;
-    display: inline-block;
-}
-
-.legend-item {
-    display: flex;
-    align-items: center;
-    margin: 5px;
-    font-size: 14px;
-}
-
+/* 🎨 Beam Legend Colors */
 .legend-color {
     width: 20px;
     height: 20px;
-    margin-right: 10px;
     display: inline-block;
     border-radius: 5px;
+    margin-right: 10px;
 }
+
+/* ✅ Installed beams (Green) */
+.legend-color.installed {
+    background-color: rgba(0, 255, 0, 0.7);
+}
+
+/* ❌ Not installed beams (Red) */
+.legend-color.not-installed {
+    background-color: rgba(255, 0, 0, 0.5);
+}
+
+/* 🔍 Search highlight (Yellow Border) */
+.legend-color.highlight {
+    border: 3px solid yellow;
+    background-color: transparent;
+}
+
 
 /* 📱 Mobile Optimization */
 @media (max-width: 768px) {
@@ -316,13 +317,20 @@ img {
 
     <p id="statusMessage">Loading beam status...</p>
 
-     <!-- 📋 Beam Status Legend -->
-    <div id="beam-legend">
-        <h3>Beam Status Legend</h3>
-        <div class="legend-item"><span class="legend-color installed"></span> Installed</div>
-        <div class="legend-item"><span class="legend-color not-installed"></span> Not Installed</div>
-        <div class="legend-item"><span class="legend-color highlight"></span> Search Highlight</div>
-    </div>
+    <!-- 📋 Beam Status Legend -->
+	<div id="beam-legend">
+    	<h3>Beam Status Legend</h3>
+    	<div class="legend-item">
+        <span class="legend-color installed"></span> Installed
+    	</div>
+    	<div class="legend-item">
+        <span class="legend-color not-installed"></span> Not Installed
+    	</div>
+    	<div class="legend-item">
+        <span class="legend-color highlight"></span> Search Highlight
+    	</div>
+	</div>
+
 
     <!-- 📌 Beam Details Panel -->
     <div id="beamDetailsPanel" class="details-panel">
