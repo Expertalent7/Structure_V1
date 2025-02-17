@@ -305,13 +305,14 @@ img {
     	</div>
     </div>
 	
-    <!-- 📊 Installation Progress -->
-    <h2 id="progress">Installation Progress: <span id="progressText">0%</span></h2>
-    <div class="progress-wrapper">
-        <div id="progressContainer">
-            <div id="progressBar">0%</div>
-        </div>
+    	<!-- 📊 Installation Progress -->
+	<h2 id="installationProgress"><strong>Installation Progress:</strong> 0%</h2>
+	<div id="progressContainer" style="width: 100%; background-color: #ccc; border-radius: 10px;">
+    	<div id="progressBar" style="width: 0%; height: 30px; background-color: green; text-align: center; color: white; border-radius: 10px;">
+        0%
     </div>
+</div>
+
 
     <p id="statusMessage">Loading beam status...</p>
 
@@ -485,14 +486,19 @@ function updateTotalProgress() {
     });
 
     let overallProgress = totalWeight > 0 ? (installedWeight / totalWeight) * 100 : 0;
-
+    
     // ✅ Update Progress Bar
     let progressBar = document.getElementById("progressBar");
     let progressText = document.getElementById("installationProgress");
 
-    progressBar.style.width = `${Math.min(overallProgress, 100)}%`;
-    progressBar.innerText = `${overallProgress.toFixed(2)}%`;
-    progressText.innerText = `Installation Progress: ${overallProgress.toFixed(2)}%`;
+    // ✅ Ensure elements exist before updating
+    if (progressBar && progressText) {
+        progressBar.style.width = `${Math.min(overallProgress, 100)}%`;
+        progressBar.innerText = `${overallProgress.toFixed(2)}%`;
+        progressText.innerHTML = `<strong>Installation Progress:</strong> ${overallProgress.toFixed(2)}%`;
+    } else {
+        console.error("❌ Progress bar or installationProgress element missing!");
+    }
 
     console.log(`✅ Total progress updated to: ${overallProgress.toFixed(2)}%`);
 }
