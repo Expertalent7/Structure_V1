@@ -8,17 +8,18 @@ document.addEventListener("DOMContentLoaded", function () {
     const progressText = document.getElementById("progress");
     const progressBar = document.getElementById("progressBar");
 
-    // 🎯 Create Tooltip
+    // 🎯 Create Tooltip (Attach to Document)
     const tooltip = document.createElement("div");
     tooltip.classList.add("beam-tooltip");
     tooltip.style.position = "absolute";
     tooltip.style.display = "none";
     tooltip.style.padding = "6px";
-    tooltip.style.backgroundColor = "rgba(0, 0, 0, 0.75)";
+    tooltip.style.backgroundColor = "black";
     tooltip.style.color = "white";
     tooltip.style.borderRadius = "5px";
     tooltip.style.fontSize = "12px";
-    tooltip.style.pointerEvents = "none";  // Prevents interference with hover detection
+    tooltip.style.pointerEvents = "none";
+    tooltip.style.zIndex = "1000"; // Ensures it's above other elements
     document.body.appendChild(tooltip);
 
     const beams = document.querySelectorAll(".beam");
@@ -83,7 +84,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    // 🎯 Tooltip for Beam Info on Hover
+    // 🎯 Tooltip for Beam Info on Hover (Position on Beam)
     beams.forEach(beam => {
         beam.addEventListener("mouseenter", (event) => {
             let beamName = event.target.dataset.name.trim();
@@ -94,15 +95,20 @@ document.addEventListener("DOMContentLoaded", function () {
             if (beamDataEntry) {
                 let beamStatus = beamDataEntry.Progress > 0 ? "Installed" : "Not Installed";
                 tooltip.innerText = `${beamName} - ${beamStatus}`;
-                tooltip.style.left = `${event.pageX + 15}px`;
-                tooltip.style.top = `${event.pageY + 15}px`;
+                
+                // ✅ Position tooltip **above** or **beside** the beam
+                let beamRect = event.target.getBoundingClientRect();
+                tooltip.style.left = `${beamRect.left + window.scrollX + beamRect.width / 2}px`;
+                tooltip.style.top = `${beamRect.top + window.scrollY - 25}px`; // Above the beam
+                tooltip.style.transform = "translate(-50%, -100%)"; // Center it above
                 tooltip.style.display = "block";
             }
         });
 
         beam.addEventListener("mousemove", (event) => {
-            tooltip.style.left = `${event.pageX + 15}px`;
-            tooltip.style.top = `${event.pageY + 15}px`;
+            let beamRect = event.target.getBoundingClientRect();
+            tooltip.style.left = `${beamRect.left + window.scrollX + beamRect.width / 2}px`;
+            tooltip.style.top = `${beamRect.top + window.scrollY - 25}px`;
         });
 
         beam.addEventListener("mouseleave", () => {
