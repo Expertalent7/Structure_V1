@@ -37,6 +37,8 @@ document.addEventListener("DOMContentLoaded", function () {
         window.open(qrCodeUrl, "_blank");
     }
     });
+    beamDetailsPanel.style.left = `${event.clientX + 10}px`;
+    beamDetailsPanel.style.top = `${event.clientY + 10}px`;
 
 
     // 🎯 Show Beam Details on Click
