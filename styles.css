@@ -22,21 +22,27 @@ body {
     max-width: 600px;
 }
 /* 🎯 Beam Styling */
+/* 🎯 Beam Animation - Smooth color transition */
 .beam {
-    position: absolute;
-    cursor: pointer;
-    transition: all 0.3s ease-in-out;
-}
-/* ✅ Installed beams will be fully green */
-.beam.installed {
-    background-color: rgba(0, 255, 0, 0.9) !important; /* ✅ Strong Green */
-    border: 3px solid darkgreen !important;
+    transition: background-color 0.5s ease-in-out, transform 0.3s ease-in-out;
 }
 
-/* 🔴 Not Installed beams will be red */
+/* ✅ Green for installed beams with animation */
+.beam.installed {
+    background-color: rgba(0, 255, 0, 0.9) !important;
+    border: 2px solid green !important;
+    transform: scale(1.1);
+}
+
+/* 🔴 Red for not installed beams */
 .beam.not-installed {
     background-color: rgba(255, 0, 0, 0.7) !important;
-    border: 2px solid darkred !important;
+    border: 2px solid red !important;
+}
+
+/* ✨ Hover Effect */
+.beam:hover {
+    transform: scale(1.2);
 }
 
 /* 🔍 Yellow border for search highlights */
