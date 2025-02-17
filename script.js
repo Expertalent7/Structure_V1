@@ -107,22 +107,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     // 🔄 Fetch Beam Status
-    async function fetchBeamStatus() {
+async function fetchBeamStatus() {
     console.log("🔄 Fetching beam status...");
 
     try {
         const response = await fetch("https://script.google.com/macros/s/AKfycbzYGsk8FxgsszxZfzDSKjMoCI7zd1bGg5iUqmpc7R8jg92U_xG5W1VNp2R5LTlEssXEIg/exec");
-
-        if (!response.ok) {
-            throw new Error(`❌ HTTP error! Status: ${response.status}`);
-        }
+        if (!response.ok) throw new Error(`❌ HTTP error! Status: ${response.status}`);
 
         const text = await response.text();
         console.log("🛠 Raw API Response (Before Parsing):", text);
 
-        if (!text.trim()) {
-            throw new Error("❌ API returned an empty response!");
-        }
+        if (!text.trim()) throw new Error("❌ API returned an empty response!");
 
         let data;
         try {
@@ -134,8 +129,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
         console.log("✅ JSON Data Received:", data);
         window.beamData = data;
-        console.log("📌 window.beamData is now set:", window.beamData);
-
         updateBeamUI();
         updateTotalProgress();
 
