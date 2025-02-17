@@ -27,16 +27,18 @@ body {
     cursor: pointer;
     transition: all 0.3s ease-in-out;
 }
-/* ✅ Green for installed beams */
+/* ✅ Installed beams will be fully green */
 .beam.installed {
-    background-color: rgba(0, 255, 0, 0.7) !important; /* Green Fill */
-    border: 2px solid green !important; /* Ensure it's visible */
+    background-color: rgba(0, 255, 0, 0.9) !important; /* ✅ Strong Green */
+    border: 3px solid darkgreen !important;
 }
-/* 🔴 Red for not installed beams */
+
+/* 🔴 Not Installed beams will be red */
 .beam.not-installed {
     background-color: rgba(255, 0, 0, 0.7) !important;
-    border: 2px solid red !important;
+    border: 2px solid darkred !important;
 }
+
 /* 🔍 Yellow border for search highlights */
 .beam.highlight {
     border: 3px solid yellow !important;
