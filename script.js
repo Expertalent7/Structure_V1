@@ -136,8 +136,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 }
 
-
-    function updateBeamUI() {
+function updateBeamUI() {
     if (!window.beamData || !window.beamData.beams) {
         console.error("❌ beamData is not available or missing 'beams' array!");
         return;
@@ -150,19 +149,20 @@ document.addEventListener("DOMContentLoaded", function () {
         );
 
         if (beamDataEntry) {
-            // ✅ Add green for installed beams, red for not installed
+            // ✅ Remove any previous class before adding a new one
+            beamElement.classList.remove("installed", "not-installed");
+
             if (beamDataEntry.Progress > 0) {
-                beamElement.classList.add("installed");
-                beamElement.classList.remove("not-installed");
+                beamElement.classList.add("installed"); // ✅ Make it Green
             } else {
-                beamElement.classList.add("not-installed");
-                beamElement.classList.remove("installed");
+                beamElement.classList.add("not-installed"); // 🔴 Make it Red
             }
 
             beamElement.dataset.progress = (beamDataEntry.Progress * 100).toFixed(2);
             beamElement.dataset.qrCode = beamDataEntry.QR_Code;
             console.log(`✅ Updated ${beamName} with Progress ${beamDataEntry.Progress}`);
         } else {
+            // If no matching beam found, reset the class
             beamElement.classList.remove("installed", "not-installed");
             console.warn(`⚠ No matching data for ${beamName}`);
         }
