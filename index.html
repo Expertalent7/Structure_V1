@@ -4,262 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Beam Selection Tool</title>
-	
+
+    <!-- ✅ External Stylesheet -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- ✅ JavaScript -->
+    <script defer src="script.js"></script>
 </head>
-<style>
-	  /* 🎨 Global Styles */
-body {
-    text-align: center;
-    font-family: Arial, sans-serif;
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    transition: background 0.3s ease, color 0.3s ease;
-}
-
-.wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-/* 📏 Fix Image and Beams Alignment */
-.container {
-    position: relative;
-    display: flex;
-    justify-content: center; /* Centers horizontally */
-    align-items: center; /* Centers vertically */
-    flex-direction: column;
-    margin: auto;
-    max-width: 600px; /* Adjust width based on structure */
-}
-
-img {
-    display: block;
-    max-width: 100%;
-    height: auto;
-    margin: 0 auto;
-}
-
-/* 🎯 Beam Highlight & Selection Effects */
-.beam {
-    position: absolute;
-    transition: all 0.3s ease-in-out;
-    transform-origin: center;
-    background-color: var(--beam-color);
-    cursor: pointer;
-    touch-action: manipulation;
-}
-
-.beam.selected {
-    transform: scale(1.05);
-    box-shadow: 0 0 10px rgba(0, 255, 0, 0.8);
-}
-
-.beam.highlight {
-    border: 3px solid yellow !important;
-}
-
-/* 🔥 Tooltip Styling */
-.beam-tooltip {
-    position: absolute;
-    background: #222;
-    color: white;
-    padding: 5px 10px;
-    border-radius: 5px;
-    font-size: 12px;
-    display: none;
-    box-shadow: 0 0 5px rgba(0,0,0,0.5);
-}
-
-/* 📌 Beam Details Panel */
-.details-panel {
-    position: absolute;
-    background: var(--panel-bg);
-    color: var(--text-color);
-    border: 1px solid #666;
-    padding: 10px;
-    border-radius: 5px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
-    display: none;
-    z-index: 1000;
-    font-size: 14px;
-    transition: opacity 0.2s ease-in-out;
-    max-width: 250px;
-}
-
-/* ✅ Search Bar */
-#beamSearch {
-    width: 300px;
-    padding: 8px;
-    margin-bottom: 10px;
-    font-size: 14px;
-}
-
-/* ✅ Status and Progress Messages */
-#beam-info {
-    margin-top: 10px;
-    font-size: 18px;
-    font-weight: bold;
-}
-
-#statusMessage {
-    margin-top: 10px;
-    font-size: 16px;
-    font-weight: bold;
-    color: darkblue;
-}
-
-/* 🎚️ Progress Bar Styling */
-#progressContainer {
-    width: 50%;
-    max-width: 400px;
-    height: 20px;
-    background-color: #ddd;
-    border-radius: 10px;
-    overflow: hidden;
-    margin: 10px auto;
-    box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
-}
-
-#progressBar {
-    height: 100%;
-    background-color: #4caf50;
-    color: white;
-    text-align: center;
-    line-height: 20px;
-    font-size: 14px;
-    font-weight: bold;
-    border-radius: 10px;
-    transition: width 0.5s ease-in-out;
-}
-
-
-/* ✅ **Fixing progress text display** */
-#progressText {
-    font-size: 16px;
-    font-weight: bold;
-    margin-top: 5px;
-}
-
-/* 🌙 Dark Mode */
-:root {
-    --bg-color: white;
-    --text-color: black;
-    --panel-bg: white;
-    --beam-color: rgba(255, 0, 0, 0.5);
-}
-
-.dark-mode {
-    --bg-color: #121212;
-    --text-color: white;
-    --panel-bg: #1e1e1e;
-    --beam-color: rgba(0, 255, 255, 0.5);
-}
-
-/* 🎭 Toggle Button */
-.toggle-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: #444;
-    color: white;
-    padding: 8px 12px;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-    font-size: 14px;
-    transition: background 0.3s ease;
-}
-
-.toggle-btn:hover {
-    background: #666;
-}
-
-/* 🎨 Beam Legend Colors */
-.legend-color {
-    width: 20px;
-    height: 20px;
-    display: inline-block;
-    border-radius: 5px;
-    margin-right: 10px;
-}
-
-/* ✅ Installed beams (Green) */
-.legend-color.installed {
-    background-color: rgba(0, 255, 0, 0.7);
-}
-
-/* ❌ Not installed beams (Red) */
-.legend-color.not-installed {
-    background-color: rgba(255, 0, 0, 0.5);
-}
-
-/* 🔍 Search highlight (Yellow Border) */
-.legend-color.highlight {
-    border: 3px solid yellow;
-    background-color: transparent;
-}
-
-
-/* 📱 Mobile Optimization */
-@media (max-width: 768px) {
-    .container {
-        width: 100%;
-    }
-
-    img {
-        max-width: 100%;
-        height: auto;
-    }
-
-    .details-panel {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 90%;
-        max-width: 300px;
-    }
-
-    .beam {
-        cursor: pointer;
-    }
-}
-
-.beam-tooltip {
-    position: absolute;
-    background: #222;
-    color: white;
-    padding: 5px 10px;
-    border-radius: 5px;
-    font-size: 12px;
-    display: none;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-    pointer-events: none; /* Prevent tooltip from interfering with mouse events */
-}
-
-#beamQRCode {
-    display: block;
-    margin: 10px auto;
-    border: 2px solid #ccc;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-#beamQRCode:hover {
-    border-color: #007bff;
-}
-
-.installed {
-    stroke: #00ff00 !important; /* Bright Green */
-    stroke-width: 5px !important;
-}
-
-
-</style>
-
 <body>
+
     <!-- 🌙 Dark Mode Toggle -->
     <button id="darkModeToggle" class="toggle-btn">🌙 Dark Mode</button>
 
@@ -276,61 +29,34 @@ img {
         <div class="container">
             <img src="https://expertalent7.github.io/beam-selection/structure.jpg" alt="Structure" width="494" height="682">
 
-           <!-- Beams -->
-        <div class="beam" style="top: 125px; left: 158px; width: 143px; height: 7px;" data-name="beam a"></div>
-        <div class="beam" style="top: 125px; left: 153px; width: 7px; height: 186px;" data-name="beam b"></div>
-        <div class="beam" style="top: 124px; left: 296px; width: 7px; height: 186px;" data-name="beam c"></div>
-        <div class="beam" style="top: 124px; left: 136px; width: 24px; height: 7px;" data-name="beam d"></div>
-        <div class="beam" style="top: 124px; left: 300px; width: 94px; height: 5px;" data-name="beam e"></div>
-        <div class="beam" style="top: 186px; left: 300px; width: 94px; height: 5px;" data-name="beam f"></div>
-        <div class="beam" style="top: 249px; left: 300px; width: 94px; height: 5px;" data-name="beam g"></div>
-        <div class="beam" style="top: 310px; left: 300px; width: 94px; height: 5px;" data-name="beam h"></div>
-        <div class="beam" style="top: 310px; left: 158px; width: 142px; height: 14px;" data-name="beam i"></div>
-        <div class="beam" style="top: 414px; left: 158px; width: 142px; height: 7px;" data-name="beam j"></div>
-        <div class="beam" style="top: 501px; left: 158px; width: 142px; height: 10px;" data-name="beam k"></div>
-        <div class="beam" style="top: 373px; left: 300px; width: 94px; height: 5px;" data-name="beam l"></div>
-        <div class="beam" style="top: 435px; left: 300px; width: 94px; height: 5px;" data-name="beam m"></div>
-        <div class="beam" style="top: 497px; left: 300px; width: 94px; height: 5px;" data-name="beam n"></div>
-        <div class="beam" style="top: 562px; left: 300px; width: 94px; height: 5px;" data-name="beam o"></div>
-        <div class="beam" style="top: 311px; left: 154px; width: 7px; height: 305px;" data-name="beam p"></div>
-        <div class="beam" style="top: 311px; left: 295px; width: 7px; height: 305px;" data-name="beam q"></div>
-        <div class="beam" style="top: 310px; left: 138px; width: 24px; height: 7px;" data-name="beam r"></div>
-	<div class="beam" style="top: 124px; left: 393px; width: 5px; height: 65px;" data-name="beam s"></div>
-	<div class="beam" style="top: 189px; left: 393px; width: 5px; height: 65px;" data-name="beam t"></div>
-	<div class="beam" style="top: 252px; left: 393px; width: 5px; height: 60px;" data-name="beam u"></div>
-	<div class="beam" style="top: 312px; left: 393px; width: 5px; height: 65px;" data-name="beam v"></div>
-	<div class="beam" style="top: 376px; left: 393px; width: 5px; height: 65px;" data-name="beam w"></div>
-	<div class="beam" style="top: 439px; left: 393px; width: 5px; height: 60px;" data-name="beam x"></div>
-	<div class="beam" style="top: 499px; left: 393px; width: 5px; height: 63px;" data-name="beam y"></div>
-	<div class="beam" style="top: 563px; left: 393px; width: 5px; height: 53px;" data-name="beam z"></div>
-    	</div>
+            <!-- Beams -->
+            <div class="beam" style="top: 125px; left: 158px; width: 143px; height: 7px;" data-name="beam a"></div>
+            <div class="beam" style="top: 125px; left: 153px; width: 7px; height: 186px;" data-name="beam b"></div>
+            <div class="beam" style="top: 124px; left: 296px; width: 7px; height: 186px;" data-name="beam c"></div>
+        </div>
     </div>
-	
-    	<!-- 📊 Installation Progress -->
-	<h2 id="installationProgress"><strong>Installation Progress:</strong> 0%</h2>
-	<div id="progressContainer" style="width: 100%; background-color: #ccc; border-radius: 10px;">
-    	<div id="progressBar" style="width: 0%; height: 30px; background-color: green; text-align: center; color: white; border-radius: 10px;">
-        0%
-    </div>
-</div>
 
+    <!-- 📊 Installation Progress -->
+    <h2 id="installationProgress">Installation Progress: <span id="progressValue">0%</span></h2>
+    <div id="progressContainer">
+        <div id="progressBar">0%</div>
+    </div>
 
     <p id="statusMessage">Loading beam status...</p>
 
     <!-- 📋 Beam Status Legend -->
-	<div id="beam-legend">
-    	<h3>Beam Status Legend</h3>
-    	<div class="legend-item">
-        <span class="legend-color installed"></span> Installed
-    	</div>
-    	<div class="legend-item">
-        <span class="legend-color not-installed"></span> Not Installed
-    	</div>
-    	<div class="legend-item">
-        <span class="legend-color highlight"></span> Search Highlight
-    	</div>
-	</div>
-
+    <div id="beam-legend">
+        <h3>Beam Status Legend</h3>
+        <div class="legend-item">
+            <span class="legend-color installed"></span> Installed
+        </div>
+        <div class="legend-item">
+            <span class="legend-color not-installed"></span> Not Installed
+        </div>
+        <div class="legend-item">
+            <span class="legend-color search-highlight"></span> Search Highlight
+        </div>
+    </div>
 
     <!-- 📌 Beam Details Panel -->
     <div id="beamDetailsPanel" class="details-panel">
@@ -339,212 +65,10 @@ img {
         <p><strong>Status:</strong> <span id="beamStatus"></span></p>
         <p><strong>Weight:</strong> <span id="beamWeight"></span></p>
         <p><strong>Progress:</strong> <span id="beamProgress"></span></p>
-	<p id="installationProgress">Installation Progress: 0%</p>
-
-        <p><strong>Last Scanned:</strong> <span id="beamLastScanned"></span></p>
         <p><strong>QR Code:</strong></p>
-        <img id="beamQRCode" src="https://dummyimage.com/150x150/cccccc/000000&text=No+QR+Code" alt="QR Code">
+        <img id="beamQRCode" src="" alt="QR Code">
         <button onclick="closePanel()">❌ Close</button>
     </div>
-    <div id="beam-info">Click on a beam to see details</div>
-
-    <script>
-document.addEventListener("DOMContentLoaded", function () {
-    console.log("✅ Page Loaded, Assigning Global Fetch Function");
-
-    // 🔄 Cache frequently accessed elements
-    const beamSearch = document.getElementById("beamSearch");
-    const beamDetailsPanel = document.getElementById("beamDetailsPanel");
-    const progressText = document.getElementById("installationProgress");
-    const progressBar = document.getElementById("progressBar");
-    const darkModeToggle = document.getElementById("darkModeToggle");
-    const beams = document.querySelectorAll(".beam");
-
-    // ✅ Attach globally for debugging
-    window.fetchBeamStatus = fetchBeamStatus;
-    window.updateBeamUI = updateBeamUI;
-    window.updateTotalProgress = updateTotalProgress;
-
-    // ✅ Beam Search
-    beamSearch.addEventListener("input", function () {
-        let input = this.value.toLowerCase().trim();
-        beams.forEach(beam => {
-            let beamName = beam.getAttribute("data-name").toLowerCase();
-            beam.classList.toggle("highlight", beamName.includes(input) && input !== "");
-        });
-    });
-
-    // ❌ Clear Search
-    window.clearSearch = function () {
-        beamSearch.value = "";
-        beams.forEach(beam => beam.classList.remove("highlight"));
-    };
-
-    // 📌 Close Details Panel
-    window.closePanel = function () {
-        beamDetailsPanel.style.display = "none";
-    };
-
-    // 🌙 Dark Mode Toggle
-    if (localStorage.getItem("darkMode") === "enabled") {
-        document.body.classList.add("dark-mode");
-        darkModeToggle.innerText = "☀ Light Mode";
-    }
-
-    darkModeToggle.addEventListener("click", function () {
-        document.body.classList.toggle("dark-mode");
-        localStorage.setItem("darkMode", document.body.classList.contains("dark-mode") ? "enabled" : "disabled");
-        darkModeToggle.innerText = document.body.classList.contains("dark-mode") ? "☀ Light Mode" : "🌙 Dark Mode";
-    });
-
-    // 🔄 Fetch Beam Status
-    async function fetchBeamStatus() {
-    console.log("🔄 Fetching beam status...");
-
-    try {
-        const response = await fetch("https://script.google.com/macros/s/AKfycbx2gulg9vrRGxgzwBwZA3GpKjawfVZwiuPSrfd75d7w_mDaSHq_W6sd55RXifaxjRd_ZQ/exec");
-
-        if (!response.ok) {
-            throw new Error(`❌ HTTP error! Status: ${response.status}`);
-        }
-
-        // ✅ Log raw response before parsing
-        const text = await response.text();
-        console.log("🛠 Raw API Response (Before Parsing):", text);
-
-        if (!text.trim()) {
-            throw new Error("❌ API returned an empty response!");
-        }
-
-        // ✅ Attempt to parse JSON
-        let data;
-        try {
-            data = JSON.parse(text);
-        } catch (jsonError) {
-            console.error("❌ Error parsing JSON: ", jsonError.message);
-            console.error("🚨 Raw Response that caused the error: ", text);
-            return;
-        }
-
-        console.log("✅ JSON Data Received:", data);
-
-        // ✅ Assign Data to Global Window Object
-        window.beamData = data;
-        console.log("📌 window.beamData is now set:", window.beamData);
-
-        // ✅ Update UI
-        updateBeamUI();
-        updateTotalProgress();  // ✅ Ensure total progress updates
-
-    } catch (error) {
-        console.error("❌ Error fetching beam data:", error);
-    }
-}
-
-
-    // 🎯 Show Beam Details on Click
-    document.querySelectorAll(".beam").forEach(beamElement => {
-        beamElement.addEventListener("click", function (event) {
-            let beamName = this.dataset.name;
-            let beamDataEntry = window.beamData?.beams?.find(b =>
-                b.Beam_Name.toLowerCase().trim() === beamName.toLowerCase().trim()
-            );
-
-            if (beamDataEntry) {
-                let beamStatus = beamDataEntry.Progress > 0 ? "Installed" : "Not Installed";
-                let beamWeight = beamDataEntry.Weight && beamDataEntry.Weight !== 0 
-                    ? `${beamDataEntry.Weight} kg` 
-                    : "Unknown kg"; // ✅ Fix weight display
-                let beamProgress = (beamDataEntry.Progress * 100).toFixed(2); // ✅ Convert to full percentage
-                let beamQRCode = beamDataEntry.QR_Code || "https://via.placeholder.com/150";
-
-                document.getElementById("beamName").innerText = beamName;
-                document.getElementById("beamStatus").innerText = beamStatus;
-                document.getElementById("beamWeight").innerText = beamWeight; // ✅ Fixed weight
-                document.getElementById("beamProgress").innerText = `${beamProgress}%`;
-                document.getElementById("beamQRCode").src = beamQRCode;
-
-                let isMobile = window.innerWidth <= 768;
-                beamDetailsPanel.style.left = isMobile ? "50%" : `${event.pageX + 10}px`;
-                beamDetailsPanel.style.top = isMobile ? "50%" : `${event.pageY + 10}px`;
-                beamDetailsPanel.style.transform = isMobile ? "translate(-50%, -50%)" : "";
-
-                beamDetailsPanel.style.display = "block";
-            } else {
-                console.warn(`⚠ No matching data found for ${beamName}`);
-            }
-        });
-    });
-
-function updateTotalProgress() {
-    // ✅ Ensure beamData is properly defined
-    if (!window.beamData || !window.beamData.beams) {
-        console.error("❌ beamData is not available or missing 'beams' array!");
-        return;
-    }
-
-    let totalWeight = 0;
-    let installedWeight = 0;
-
-    window.beamData.beams.forEach(beam => {
-        totalWeight += beam.Weight || 0; // ✅ Avoid NaN issues
-        if (beam.Progress > 0) {
-            installedWeight += beam.Weight || 0;
-        }
-    });
-
-    let overallProgress = totalWeight > 0 ? (installedWeight / totalWeight) * 100 : 0;
-    
-    // ✅ Update Progress Bar
-    let progressBar = document.getElementById("progressBar");
-    let progressText = document.getElementById("installationProgress");
-
-    // ✅ Ensure elements exist before updating
-    if (progressBar && progressText) {
-        progressBar.style.width = `${Math.min(overallProgress, 100)}%`;
-        progressBar.innerText = `${overallProgress.toFixed(2)}%`;
-        progressText.innerHTML = `<strong>Installation Progress:</strong> ${overallProgress.toFixed(2)}%`;
-    } else {
-        console.error("❌ Progress bar or installationProgress element missing!");
-    }
-
-    console.log(`✅ Total progress updated to: ${overallProgress.toFixed(2)}%`);
-}
-
-
-
-
-    function updateBeamUI() {
-        if (!window.beamData || !window.beamData.beams) {
-            console.error("❌ beamData is not available or missing 'beams' array!");
-            return;
-        }
-
-        document.querySelectorAll(".beam").forEach(beamElement => {
-            let beamName = beamElement.dataset.name?.toLowerCase().trim();
-            let beamDataEntry = window.beamData.beams.find(b => 
-                b.Beam_Name.toLowerCase().trim() === beamName
-            );
-
-            if (beamDataEntry) {
-                beamElement.classList.toggle("selected", beamDataEntry.Progress > 0);
-                beamElement.dataset.progress = beamDataEntry.Progress.toFixed(2);
-                beamElement.dataset.qrCode = beamDataEntry.QR_Code;
-                beamElement.style.border = beamDataEntry.Progress > 0 ? "4px solid green" : "4px solid red";
-                console.log(`✅ Updated ${beamName} with Progress ${beamDataEntry.Progress}`);
-            } else {
-                beamElement.classList.remove("selected");
-                console.warn(`⚠ No matching data for ${beamName}`);
-            }
-        });
-    }
-
-    // ✅ Fetch beam data every 5 seconds
-    setInterval(fetchBeamStatus, 5000);
-});
-
-
-    </script>
 
 </body>
 </html>
