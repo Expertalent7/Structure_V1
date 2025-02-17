@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-// 🎯 Show Beam Details on Click
+// 🎯 Show Beam Details on Click (Fix Positioning)
 beams.forEach(beamElement => {
     beamElement.addEventListener("click", function (event) {
         if (!window.beamData || !window.beamData.beams) {
@@ -62,22 +62,20 @@ beams.forEach(beamElement => {
             document.getElementById("beamProgress").innerText = beamProgress;
             document.getElementById("beamQRCode").src = beamQRCode;
 
-            // ✅ Fix Positioning of the Details Panel
+            // ✅ Fix Positioning: Ensure Beam Details Panel is Near the Clicked Beam
             let beamRect = event.target.getBoundingClientRect();
             let panelWidth = beamDetailsPanel.offsetWidth;
             let panelHeight = beamDetailsPanel.offsetHeight;
 
-            let newX = beamRect.left + window.scrollX + beamRect.width / 2 - panelWidth / 2;
-            let newY = beamRect.top + window.scrollY - panelHeight - 10; // 10px above beam
+            let posX = beamRect.left + window.scrollX + beamRect.width / 2 - panelWidth / 2;
+            let posY = beamRect.top + window.scrollY - panelHeight - 10; // 10px margin above the beam
 
-            // ✅ Ensure the panel stays within the screen
-            if (newX < 10) newX = 10;
-            if (newX + panelWidth > window.innerWidth - 10) newX = window.innerWidth - panelWidth - 10;
-            if (newY < 10) newY = beamRect.top + window.scrollY + beamRect.height + 10; // Move below if above is not possible
+            // ✅ Prevent Panel from Going Off-Screen
+            posX = Math.max(10, Math.min(posX, window.innerWidth - panelWidth - 10)); // Keep within horizontal bounds
+            posY = Math.max(10, posY); // Ensure it's not hidden above viewport
 
-            beamDetailsPanel.style.left = `${newX}px`;
-            beamDetailsPanel.style.top = `${newY}px`;
-            beamDetailsPanel.style.transform = "translate(-50%, -100%)";
+            beamDetailsPanel.style.left = `${posX}px`;
+            beamDetailsPanel.style.top = `${posY}px`;
             beamDetailsPanel.style.display = "block";
         } else {
             console.warn(`⚠ No matching data found for ${beamName}`);
