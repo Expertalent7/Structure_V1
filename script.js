@@ -100,26 +100,42 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // 🔄 Fetch Beam Status
     async function fetchBeamStatus() {
-        console.log("🔄 Fetching beam status...");
+    console.log("🔄 Fetching beam status...");
 
-        try {
-            const response = await fetch("https://script.google.com/macros/s/YOUR_SCRIPT_URL/exec");
-            if (!response.ok) throw new Error(`❌ HTTP error! Status: ${response.status}`);
+    try {
+        const response = await fetch("https://script.google.com/macros/s/AKfycbxp_PumTiMgGHLYSTNVsJUAdCzB5QT7y87dgViKiO4y7KL7MBfX4IGVYVdpIfXVOxJvzg/exec");
 
-            const text = await response.text();
-            console.log("🛠 Raw API Response (Before Parsing):", text);
-
-            if (!text.trim()) throw new Error("❌ API returned an empty response!");
-
-            let data = JSON.parse(text);
-            console.log("✅ JSON Data Received:", data);
-            window.beamData = data;
-            updateBeamUI();
-            updateTotalProgress();
-        } catch (error) {
-            console.error("❌ Error fetching beam data:", error);
+        if (!response.ok) {
+            throw new Error(`❌ HTTP error! Status: ${response.status}`);
         }
+
+        const text = await response.text();
+        console.log("🛠 Raw API Response (Before Parsing):", text);
+
+        if (!text.trim()) {
+            throw new Error("❌ API returned an empty response!");
+        }
+
+        let data;
+        try {
+            data = JSON.parse(text);
+        } catch (jsonError) {
+            console.error("❌ Error parsing JSON: ", jsonError.message);
+            return;
+        }
+
+        console.log("✅ JSON Data Received:", data);
+        window.beamData = data;
+        console.log("📌 window.beamData is now set:", window.beamData);
+
+        updateBeamUI();
+        updateTotalProgress();
+
+    } catch (error) {
+        console.error("❌ Error fetching beam data:", error);
     }
+}
+
 
     function updateBeamUI() {
         if (!window.beamData || !window.beamData.beams) return;
