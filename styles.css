@@ -41,6 +41,20 @@ body {
     background-color: rgba(0, 255, 0, 0.8) !important;
 }
 
+.beam-tooltip {
+    position: absolute;
+    background: black;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    display: none;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    pointer-events: none; /* ✅ Prevents the tooltip from interfering with mouse events */
+    z-index: 1000; /* ✅ Ensures the tooltip appears above everything */
+}
+
+
 /* 🔥 Beam Details Panel */
 .details-panel {
     position: absolute;
